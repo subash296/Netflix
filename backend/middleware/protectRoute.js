@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { User } from "../models/userModel.js";
 import { ENV_VARS } from "../config/envVars.js";
 
-export const protectRoute = async (req, res, next) => {
+ const protectRoute = async (req, res, next) => {
 	try {
 		const token = req.cookies["jwt-netflix"];
 
@@ -30,3 +30,4 @@ export const protectRoute = async (req, res, next) => {
 		res.status(500).json({ success: false, message: "Internal Server Error" });
 	}
 };
+export default  protectRoute;
