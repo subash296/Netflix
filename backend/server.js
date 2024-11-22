@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -13,6 +14,7 @@ import searchRoute from "./routes/searchRoute.js";
 
 
 const app=express();
+const __dirname=path.resolve();
 const PORT=ENV_VARS.PORT;
 
 
@@ -26,6 +28,13 @@ app.use("/api/v1/auth",authRoute)
 app.use("/api/v1/movie",movieRoute)
 app.use("/api/v1/tv",tvRoute)
 app.use("/api/v1/search",searchRoute)
+if (ENV_VARS.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname, "/frontend/dist")));
+
+	app.get("*", (req, res) => {
+		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+	});
+}
 
 app.listen(5000,()=>{
     db();

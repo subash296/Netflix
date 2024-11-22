@@ -72,6 +72,10 @@ export async function searchTv(req, res) {
 		if (response.results.length === 0) {
 			return res.status(404).send(null);
 		}
+		const matchingID=req.user.searchHistory.filter((item) => item.id === response.results[0].id); 
+		if(matchingID ===0){
+			
+		
 
 		await User.findByIdAndUpdate(req.user._id, {
 			$push: {
@@ -83,7 +87,14 @@ export async function searchTv(req, res) {
 					createdAt: new Date(),
 				},
 			},
-		});
+		});}
+		else {
+			// If the item already exists, find it and update the createdAt field
+			await User.findOneAndUpdate(
+				{ _id: req.user._id, "searchHistory.id": response.results[0].id },
+				{ $set: { "searchHistory.$.createdAt": new Date() } }
+			);
+		}
 		res.json({ success: true, content: response.results });
 	} catch (error) {
 		console.log("Error in searchTv controller: ", error.message);
