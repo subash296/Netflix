@@ -1,4 +1,3 @@
-
 import { Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -12,6 +11,7 @@ import WatchPage from "./pages/WatchPage";
 import SearchHistoryPage from "./pages/SearchHistoryPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import SearchPage from "./pages/SearchPage";
+import Footer from "./components/Footer";
 
 
 function App() {
@@ -39,10 +39,11 @@ function App() {
 				<Route path='/signup' element={!user ? <SignupPage /> : <Navigate to={"/"} />} />
 				<Route path='/watch/:id' element={user ? <WatchPage /> : <Navigate to={"/login"} />} />
 				<Route path='/history' element={user ? <SearchHistoryPage /> : <Navigate to={"/login"} />} />
-				<Route path='/watch' element={user ? <SearchPage /> : <Navigate to={"/login"} />} />			
+				<Route path='/search' element={user ? <SearchPage /> : <Navigate to={"/login"} />} />			
 				<Route path='/*' element={<NotFoundPage />} />
 			
 			</Routes>
+			<Footer />
 			<ToastContainer />
 		</>
 	);
