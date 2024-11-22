@@ -11,6 +11,8 @@ export async function searchPerson(req, res) {
 		if (response.results.length === 0) {
 			return res.status(404).send(null);
 		}
+		const matchingID=req.user.searchHistory.filter((item) => item.id === response.results[0].id);
+		if(matchingID.length === 0){
 
 		await User.findByIdAndUpdate(req.user._id, {
 			$push: {
@@ -22,7 +24,14 @@ export async function searchPerson(req, res) {
 					createdAt: new Date(),
 				},
 			},
-		});
+		});}
+		else {
+		
+			await User.findOneAndUpdate(
+				{ _id: req.user._id, "searchHistory.id": response.results[0].id },
+				{ $set: { "searchHistory.$.createdAt": new Date() } }
+			);
+		}
 
 		res.status(200).json({ success: true, content: response.results });
 	} catch (error) {
@@ -42,6 +51,8 @@ export async function searchMovie(req, res) {
 		if (response.results.length === 0) {
 			return res.status(404).send(null);
 		}
+		const matchingID=req.user.searchHistory.filter((item) => item.id === response.results[0].id);
+		if(matchingID.length === 0){
 
 		await User.findByIdAndUpdate(req.user._id, {
 			$push: {
@@ -53,7 +64,14 @@ export async function searchMovie(req, res) {
 					createdAt: new Date(),
 				},
 			},
-		});
+		});}
+		else {
+			
+			await User.findOneAndUpdate(
+				{ _id: req.user._id, "searchHistory.id": response.results[0].id },
+				{ $set: { "searchHistory.$.createdAt": new Date() } }
+			);
+		}
 		res.status(200).json({ success: true, content: response.results });
 	} catch (error) {
 		console.log("Error in searchMovie controller: ", error.message);
@@ -73,10 +91,8 @@ export async function searchTv(req, res) {
 			return res.status(404).send(null);
 		}
 		const matchingID=req.user.searchHistory.filter((item) => item.id === response.results[0].id); 
-		if(matchingID ===0){
-			
-		
-
+		if(matchingID.length === 0){
+	
 		await User.findByIdAndUpdate(req.user._id, {
 			$push: {
 				searchHistory: {
